@@ -1,0 +1,34 @@
+import socket
+
+def ontvang_bestanden(doel_poort):
+    # Maak een TCP-socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    # Laat de socket luisteren op alle beschikbare interfaces op de opgegeven poort
+    server_socket.bind(('0.0.0.0', doel_poort))
+    server_socket.listen(1)
+    
+    print(f"Wachtend op verbindingen op poort {doel_poort}...")
+    
+    # Accepteer inkomende verbindingen
+    client_socket, client_address = server_socket.accept()
+    print(f"Verbonden met {client_address}")
+    
+    # Ontvang bestand 1
+    bestand1_data = client_socket.recv(1024)
+    with open("ontvangen_bestand1.txt", 'wb') as file:
+        file.write(bestand1_data)
+    print("Bestand 1 ontvangen.")
+    
+    # Ontvang bestand 2
+    bestand2_data = client_socket.recv(1024)
+    with open("ontvangen_bestand2.txt", 'wb') as file:
+        file.write(bestand2_data)
+    print("Bestand 2 ontvangen.")
+    
+    # Sluit de socket verbinding
+    client_socket.close()
+    
+doel_poort = 12345  # Poortnummer moet hetzelfde zijn als het poortnummer dat de verzendende partij gebruikt
+
+ontvang_bestanden(65000)
